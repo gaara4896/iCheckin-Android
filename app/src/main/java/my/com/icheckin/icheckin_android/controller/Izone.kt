@@ -1,7 +1,5 @@
 package my.com.icheckin.icheckin_android.controller
 
-import com.pawegio.kandroid.d
-import kotlinx.coroutines.experimental.runBlocking
 import my.com.icheckin.icheckin_android.utils.network.Request
 
 /**
@@ -18,18 +16,10 @@ object Izone {
                 "form_action" to "submitted",
                 "student_uid" to username,
                 "password" to password)
-        //val response = Request().execute(Request.Companion.Method.POST, LOGIN_URL, payload, null).get()
-        val response = Request.post(LOGIN_URL, data=payload)
-        if (response.statusCode == 200) {
-            if (response.history.isNotEmpty()) {
-                d("Success")
-                return true
-            }
-            d("Fail")
-            return false
-        } else {
-            d("${response.statusCode}")
-            return false
+        val response = Request.post(LOGIN_URL, data = payload)
+        if (response.isSuccessful && response.priorResponse() != null) {
+            return true
         }
+        return false
     }
 }

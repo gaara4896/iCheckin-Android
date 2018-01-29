@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import com.pawegio.kandroid.d
 import com.pawegio.kandroid.longToast
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.activity_add_account.*
@@ -13,8 +12,6 @@ import my.com.icheckin.icheckin_android.controller.Izone
 import my.com.icheckin.icheckin_android.model.Student
 import my.com.icheckin.icheckin_android.utils.database.Database
 import ninja.sakib.pultusorm.core.PultusORMCondition
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
 
 class AddAccountActivity : AppCompatActivity() {
 
@@ -23,7 +20,6 @@ class AddAccountActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_account)
 
         imageButton_Close.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
 
@@ -67,38 +63,18 @@ class AddAccountActivity : AppCompatActivity() {
                 PultusORMCondition.Builder()
                         .eq("username", username)
                         .build()).isEmpty()) {
-            longToast("Account $username already exists.")
+            editText_ID.error = "$username already exists"
             return
         }
-        val success = Izone.login(username, password)
-        if(success){
-            startActivity(Intent(this, MainActivity::class.java))
+        if (Izone.login(username, password)){
+            val student = Student()
+            student.init(username, password)
+            Database.insert(applicationContext, student)
+            longToast("Success")
             finish()
         } else {
-            longToast("Failed")
+            editText_Password.error = "Wrong password"
         }
-/*        val payload = mapOf(
-                "form_action" to "submitted",
-                "student_uid" to username,
-                "password" to password)
-        val responseFuture = async { khttp.post(Izone.LOGIN_URL, data = payload) }
-        val response = runBlocking { responseFuture.await() }
-        if (response.statusCode == 200) {
-            if (response.history.isNotEmpty()) {
-                d("Success")
-                longToast("Success")
-            }
-            d("Fail")
-            d(response.headers.toString())
-            longToast("Fail")
-        } else {
-            d("${response.statusCode}")
-            longToast("Fail")
-        }*/
-    }
 
-    override fun onBackPressed() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
     }
 }
