@@ -28,6 +28,7 @@ class AccountFragment : Fragment() {
 
         button_NewAccount.setOnClickListener {
             startActivity(Intent(context, AddAccountActivity::class.java))
+            activity.finish()
         }
     }
 
