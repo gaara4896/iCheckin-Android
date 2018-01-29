@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="my.com.icheckin.icheckin_android.MainActivity">
+    tools:context="my.com.icheckin.icheckin_android.view.MainActivity">
 
     <FrameLayout
         android:id="@+id/frameLayout"

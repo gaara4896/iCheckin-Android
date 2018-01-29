@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundSecondary"
     android:orientation="vertical"
-    tools:context="my.com.icheckin.icheckin_android.AddAccountActivity">
+    tools:context="my.com.icheckin.icheckin_android.view.AddAccountActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             android:id="@+id/editText_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             android:background="@drawable/rounded_edit_text"
             android:hint="@string/id"
             android:inputType="number" />
@@ -53,7 +53,7 @@
             android:id="@+id/editText_Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_edit_text"
             android:hint="@string/password"
             android:inputType="textPassword" />
@@ -62,7 +62,7 @@
             android:id="@+id/button_AddAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/rounded_button_secondary"
             android:text="@string/add_account"
             android:textAllCaps="false"

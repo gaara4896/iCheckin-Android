@@ -1,4 +1,4 @@
-package my.com.icheckin.icheckin_android.Fragment
+package my.com.icheckin.icheckin_android.fragment
 
 
 import android.content.Intent
@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_account.*
-import my.com.icheckin.icheckin_android.AddAccountActivity
 import my.com.icheckin.icheckin_android.R
+import my.com.icheckin.icheckin_android.view.AddAccountActivity
 
 
 /**

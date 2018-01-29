@@ -1,4 +1,4 @@
-package my.com.icheckin.icheckin_android.Fragment
+package my.com.icheckin.icheckin_android.fragment
 
 
 import android.os.Bundle

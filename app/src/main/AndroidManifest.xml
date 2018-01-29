@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Primary">
             <intent-filter>
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddAccountActivity"
+            android:name=".view.AddAccountActivity"
             android:label="@string/add_new_account"
             android:theme="@style/AppTheme.Secondary"/>
     </application>
