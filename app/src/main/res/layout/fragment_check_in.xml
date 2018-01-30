@@ -21,6 +21,16 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/button_CheckIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button_primary"
+            android:text="@string/title_check_in"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
 </FrameLayout>

@@ -1,17 +1,18 @@
 package my.com.icheckin.icheckin_android.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.pawegio.kandroid.longToast
 import com.pawegio.kandroid.textWatcher
+import com.pawegio.kandroid.wtf
 import kotlinx.android.synthetic.main.activity_add_account.*
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
 import my.com.icheckin.icheckin_android.model.Student
 import my.com.icheckin.icheckin_android.utils.database.Database
 import ninja.sakib.pultusorm.core.PultusORMCondition
+import java.io.IOException
 
 class AddAccountActivity : AppCompatActivity() {
 
@@ -66,14 +67,19 @@ class AddAccountActivity : AppCompatActivity() {
             editText_ID.error = "$username already exists"
             return
         }
-        if (Izone.login(username, password)){
-            val student = Student()
-            student.init(username, password)
-            Database.insert(applicationContext, student)
-            longToast("Success")
-            finish()
-        } else {
-            editText_Password.error = "Wrong password"
+        try {
+            if (Izone.login(username, password).first) {
+                val student = Student()
+                student.init(username, password)
+                Database.insert(applicationContext, student)
+                longToast("Success")
+                finish()
+            } else {
+                editText_Password.error = "Wrong password"
+            }
+        } catch (e: IOException) {
+            wtf(e.toString())
+            longToast("No internet connection")
         }
 
     }

@@ -31,7 +31,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.9.1'
     compile 'ninja.sakib:PultusORM:v1.7'
     compile 'com.pawegio.kandroid:kandroid:0.8.5@aar'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
