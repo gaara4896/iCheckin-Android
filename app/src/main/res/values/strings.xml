@@ -8,4 +8,6 @@
     <string name="description_close">Close</string>
     <string name="add_account">Add Account</string>
     <string name="code">Code</string>
+    <string name="crown">Crown</string>
+    <string name="password_string">Password: ************</string>
 </resources>

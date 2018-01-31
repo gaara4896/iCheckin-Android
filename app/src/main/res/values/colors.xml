@@ -7,5 +7,6 @@
     <color name="backgroundPrimary">#141E2F</color>
     <color name="backgroundSecondary">#3AA982</color>
     <color name="backgroundNavigation">#2E333D</color>
+    <color name="backgroundCard">#D4EAE6</color>
     <color name="disabled">#555555</color>
 </resources>
