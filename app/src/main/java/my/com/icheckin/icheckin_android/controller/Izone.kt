@@ -32,15 +32,15 @@ object Izone {
 
     fun checkin(username: String, password: String, code: String): String {
 
+        val pair = login(username, password)
+        if (!pair.first) {
+            return "Invalid credentials"
+        }
+
         try {
             Request.get(WIFI_URL)
         } catch (e: IOException) {
             return "Not connected to University Wi-Fi"
-        }
-
-        val pair = login(username, password)
-        if (!pair.first) {
-            return "Invalid credentials"
         }
 
         val response = Request.post(CHECKIN_URL, data = mapOf("checkin_code" to code),

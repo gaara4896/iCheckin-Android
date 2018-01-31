@@ -7,4 +7,5 @@
     <string name="id">ID</string>
     <string name="description_close">Close</string>
     <string name="add_account">Add Account</string>
+    <string name="code">Code</string>
 </resources>

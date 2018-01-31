@@ -61,9 +61,9 @@ class AddAccountActivity : AppCompatActivity() {
 
     private fun insertAccount(username: String, password: String) {
         if (!Database.query<Student>(applicationContext, Student(),
-                PultusORMCondition.Builder()
-                        .eq("username", username)
-                        .build()).isEmpty()) {
+                        PultusORMCondition.Builder()
+                                .eq("username", username)
+                                .build()).isEmpty()) {
             editText_ID.error = "$username already exists"
             return
         }
