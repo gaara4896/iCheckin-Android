@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_check_in.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -32,8 +34,18 @@ class CheckInFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        editText_Code.textWatcher {
+            afterTextChanged { text ->
+                if (text!!.isNotBlank()) enableButton(true) else enableButton(false)
+            }
+        }
+
         button_CheckIn.setOnClickListener {
+            textView_Status.text = ""
             enableButton(false)
+            activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
             async {
                 val students = Database.query(activity.applicationContext, Student())
                 val code = editText_Code.text.toString()
@@ -45,11 +57,11 @@ class CheckInFragment : Fragment() {
                     } catch (e: IOException) {
                         launch(UI) { textView_Status.text = "${textView_Status.text.toString()}No internet connection\n" }
                     }
-                    Thread.sleep(1000)
                 }
                 launch(UI) {
                     textView_Status.text = "${textView_Status.text.toString()}Finish Checkin\n"
                     enableButton(true)
+                    activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
             }
         }
