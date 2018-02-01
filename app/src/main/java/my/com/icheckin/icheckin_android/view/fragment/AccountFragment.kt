@@ -1,7 +1,6 @@
 package my.com.icheckin.icheckin_android.fragment
 
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -43,7 +42,7 @@ class AccountFragment : Fragment() {
         loadStudent()
     }
 
-    fun loadStudent(){
+    fun loadStudent() {
         val students = Database.query<Student>(activity.applicationContext, Student())
         recycleView_Account.layoutManager = LinearLayoutManager(activity.applicationContext)
         recycleView_Account.adapter = AccountCardView(activity.applicationContext, students) {}

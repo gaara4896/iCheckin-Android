@@ -1,4 +1,4 @@
-package my.com.icheckin.icheckin_android.view.fragment
+package my.com.icheckin.icheckin_android.utils.view
 
 import android.app.Dialog
 import android.content.Context
@@ -11,6 +11,8 @@ import my.com.icheckin.icheckin_android.R
  * Created by gaara on 2/1/18.
  */
 class CustomProgressDialog(context: Context, val text: String) : Dialog(context) {
+
+    constructor(context: Context) : this(context, "Processing...")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
