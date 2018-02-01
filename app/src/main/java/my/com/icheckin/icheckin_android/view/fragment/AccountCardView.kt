@@ -30,6 +30,9 @@ class AccountCardView(val context: Context, val students: MutableList<Student>, 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(context: Context, student: Student, position: Int, listener: (Student) -> Unit) = with(itemView) {
+            itemView.setOnClickListener {
+                listener.invoke(student)
+            }
             itemView.textView_ID.text = student.username
             if (position == 0) itemView.imageView_Crown.visible = true
         }

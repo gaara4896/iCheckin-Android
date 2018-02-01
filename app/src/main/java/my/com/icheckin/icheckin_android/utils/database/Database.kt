@@ -10,7 +10,7 @@ import ninja.sakib.pultusorm.core.PultusORMUpdater
  */
 object Database {
 
-    val databaseName = "icheckin.db"
+    private const val databaseName = "icheckin.db"
 
     fun <T : Any> insert(context: Context, row: T): Boolean {
         val pultusORM = PultusORM(databaseName, context.filesDir.absolutePath)
