@@ -46,7 +46,7 @@ class CheckInFragment : Fragment() {
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             async {
-                val students = AppDatabase.getDatabase(activity.applicationContext).studenDao().allStudent()
+                val students = AppDatabase.getDatabase(activity.applicationContext).studentDao().allStudent()
                 val code = editText_Code.text.toString()
                 for (student in students) {
                     launch(UI) { textView_Status.text = "${textView_Status.text.toString()}Checking in for ${student.username}\n" }

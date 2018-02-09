@@ -54,7 +54,7 @@ class AccountFragment : Fragment() {
 
     private fun loadStudent() {
         val db = AppDatabase.getDatabase(activity.applicationContext)
-        val students = db.studenDao().allStudent()
+        val students = db.studentDao().allStudent()
         recycleView_Account.layoutManager = LinearLayoutManager(activity.applicationContext)
         recycleView_Account.adapter = AccountCardView(activity.applicationContext, students) { student ->
             val editText = EditText(activity.window.context)
@@ -77,7 +77,7 @@ class AccountFragment : Fragment() {
                         async {
                             if (Izone.login(student.username!!, password).first) {
                                 student.password(activity.applicationContext, password)
-                                db.studenDao().update(student)
+                                db.studentDao().update(student)
                                 launch(UI) {
                                     progressDialog.hide()
                                     activity.window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
@@ -94,7 +94,7 @@ class AccountFragment : Fragment() {
 
                     })
                     .setNeutralButton("Delete", { _, _ ->
-                        db.studenDao().delete(student)
+                        db.studentDao().delete(student)
                         students.remove(student)
                         recycleView_Account.adapter.notifyDataSetChanged()
                         longToast("${student.username} deleted")

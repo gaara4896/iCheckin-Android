@@ -70,7 +70,7 @@ class AddAccountActivity : AppCompatActivity() {
 
         async {
             val db = AppDatabase.getDatabase(applicationContext)
-            if (db.studenDao().query(username) != null) {
+            if (db.studentDao().query(username) != null) {
                 launch(UI) {
                     editText_ID.error = "$username already exists"
                     progressDialog.hide()
@@ -87,7 +87,7 @@ class AddAccountActivity : AppCompatActivity() {
                 if (success) {
                     val student = Student()
                     student.init(applicationContext, username, password)
-                    db.studenDao().insert(student)
+                    db.studentDao().insert(student)
                     launch(UI) {
                         longToast("Success")
                         finish()
