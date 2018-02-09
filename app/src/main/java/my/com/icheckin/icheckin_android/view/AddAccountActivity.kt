@@ -13,10 +13,9 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.model.Student
-import my.com.icheckin.icheckin_android.utils.database.Database
+import my.com.icheckin.icheckin_android.model.entity.Student
+import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import my.com.icheckin.icheckin_android.utils.view.CustomProgressDialog
-import ninja.sakib.pultusorm.core.PultusORMCondition
 import java.io.IOException
 
 class AddAccountActivity : AppCompatActivity() {
@@ -70,10 +69,8 @@ class AddAccountActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
         async {
-            if (!Database.query<Student>(applicationContext, Student(),
-                            PultusORMCondition.Builder()
-                                    .eq("username", username)
-                                    .build()).isEmpty()) {
+            val db = AppDatabase.getDatabase(applicationContext)
+            if (db.studenDao().query(username) != null) {
                 launch(UI) {
                     editText_ID.error = "$username already exists"
                     progressDialog.hide()
@@ -89,8 +86,8 @@ class AddAccountActivity : AppCompatActivity() {
                 }
                 if (success) {
                     val student = Student()
-                    student.init(username, password)
-                    Database.insert(applicationContext, student)
+                    student.init(applicationContext, username, password)
+                    db.studenDao().insert(student)
                     launch(UI) {
                         longToast("Success")
                         finish()

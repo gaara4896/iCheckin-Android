@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.pawegio.kandroid.visible
 import kotlinx.android.synthetic.main.cardview_account.view.*
 import my.com.icheckin.icheckin_android.R
-import my.com.icheckin.icheckin_android.model.Student
+import my.com.icheckin.icheckin_android.model.entity.Student
 
 /**
  * Created by gaara on 1/31/18.

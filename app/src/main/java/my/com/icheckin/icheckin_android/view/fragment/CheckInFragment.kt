@@ -15,8 +15,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.model.Student
-import my.com.icheckin.icheckin_android.utils.database.Database
+import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import java.io.IOException
 
 
@@ -47,12 +46,12 @@ class CheckInFragment : Fragment() {
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             async {
-                val students = Database.query(activity.applicationContext, Student())
+                val students = AppDatabase.getDatabase(activity.applicationContext).studenDao().allStudent()
                 val code = editText_Code.text.toString()
                 for (student in students) {
                     launch(UI) { textView_Status.text = "${textView_Status.text.toString()}Checking in for ${student.username}\n" }
                     try {
-                        val result = Izone.checkin(student.username!!, student.password!!, code)
+                        val result = Izone.checkin(student.username!!, student.password(activity.applicationContext), code)
                         launch(UI) { textView_Status.text = "${textView_Status.text.toString()}$result\n" }
                     } catch (e: IOException) {
                         launch(UI) { textView_Status.text = "${textView_Status.text.toString()}No internet connection\n" }

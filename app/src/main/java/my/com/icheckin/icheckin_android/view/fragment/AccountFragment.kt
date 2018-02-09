@@ -20,13 +20,10 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.model.Student
-import my.com.icheckin.icheckin_android.utils.database.Database
+import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import my.com.icheckin.icheckin_android.utils.view.CustomProgressDialog
 import my.com.icheckin.icheckin_android.view.AddAccountActivity
 import my.com.icheckin.icheckin_android.view.fragment.AccountCardView
-import ninja.sakib.pultusorm.core.PultusORMCondition
-import ninja.sakib.pultusorm.core.PultusORMUpdater
 
 
 /**
@@ -56,7 +53,8 @@ class AccountFragment : Fragment() {
     }
 
     private fun loadStudent() {
-        val students = Database.query<Student>(activity.applicationContext, Student())
+        val db = AppDatabase.getDatabase(activity.applicationContext)
+        val students = db.studenDao().allStudent()
         recycleView_Account.layoutManager = LinearLayoutManager(activity.applicationContext)
         recycleView_Account.adapter = AccountCardView(activity.applicationContext, students) { student ->
             val editText = EditText(activity.window.context)
@@ -78,17 +76,12 @@ class AccountFragment : Fragment() {
                         activity.window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                         async {
                             if (Izone.login(student.username!!, password).first) {
-                                val success = Database.update(activity.applicationContext, Student(),
-                                        PultusORMUpdater.Builder()
-                                                .condition(PultusORMCondition.Builder()
-                                                        .eq("username", student.username!!)
-                                                        .build())
-                                                .set("password", password)
-                                                .build())
+                                student.password(activity.applicationContext, password)
+                                db.studenDao().update(student)
                                 launch(UI) {
                                     progressDialog.hide()
                                     activity.window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                                    if (success) longToast("Update successfully") else longToast("Failed")
+                                    longToast("Update successfully")
                                 }
                             } else {
                                 launch(UI) {
@@ -101,14 +94,10 @@ class AccountFragment : Fragment() {
 
                     })
                     .setNeutralButton("Delete", { _, _ ->
-                        val success = Database.delete(activity.applicationContext, Student(),
-                                PultusORMCondition.Builder()
-                                        .eq("username", student.username!!)
-                                        .build()
-                        )
+                        db.studenDao().delete(student)
                         students.remove(student)
                         recycleView_Account.adapter.notifyDataSetChanged()
-                        if (success) longToast("${student.username} deleted") else longToast("Fail to delete ${student.username}")
+                        longToast("${student.username} deleted")
                     })
                     .setNegativeButton("Cancel", { _, _ -> })
                     .show()
