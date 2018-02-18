@@ -14,6 +14,10 @@
         <item name="android:statusBarColor">@color/backgroundPrimary</item>
     </style>
 
+    <style name="AppTheme.MainActivity" parent="AppTheme.Primary">
+        <item name="android:windowBackground"> @drawable/splash</item>
+    </style>
+
     <style name="AppTheme.Secondary">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
