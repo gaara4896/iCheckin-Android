@@ -12,7 +12,7 @@ import my.com.icheckin.icheckin_android.model.entity.Student
 /**
  * Created by gaara on 2/9/18.
  */
-@Database(entities = arrayOf(Student::class), version = 1)
+@Database(entities = [(Student::class)], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {

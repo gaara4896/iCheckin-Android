@@ -5,12 +5,13 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.content.Context
 import my.com.icheckin.icheckin_android.utils.security.Cryptography
+import java.io.Serializable
 
 /**
  * Created by gaara on 2/3/18.
  */
 @Entity
-class Student() {
+class Student : Serializable {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

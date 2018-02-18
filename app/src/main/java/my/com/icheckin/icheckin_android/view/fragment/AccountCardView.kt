@@ -13,7 +13,7 @@ import my.com.icheckin.icheckin_android.model.entity.Student
 /**
  * Created by gaara on 1/31/18.
  */
-class AccountCardView(val context: Context, val students: MutableList<Student>, val listener: (Student) -> Unit) : RecyclerView.Adapter<AccountCardView.ViewHolder>() {
+class AccountCardView(val context: Context, private val students: MutableList<Student>, private val listener: (Student) -> Unit) : RecyclerView.Adapter<AccountCardView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountCardView.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.cardview_account, parent, false)
@@ -21,7 +21,7 @@ class AccountCardView(val context: Context, val students: MutableList<Student>, 
     }
 
     override fun onBindViewHolder(holder: AccountCardView.ViewHolder, position: Int) {
-        holder.bindItems(context, students[position], position, listener)
+        holder.bindItems(students[position], position, listener)
     }
 
     override fun getItemCount(): Int {
@@ -29,7 +29,7 @@ class AccountCardView(val context: Context, val students: MutableList<Student>, 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItems(context: Context, student: Student, position: Int, listener: (Student) -> Unit) = with(itemView) {
+        fun bindItems(student: Student, position: Int, listener: (Student) -> Unit) = with(itemView) {
             itemView.setOnClickListener {
                 listener.invoke(student)
             }

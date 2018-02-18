@@ -3,6 +3,7 @@
     <string name="title_accounts">Accounts</string>
     <string name="title_check_in">Check In</string>
     <string name="add_new_account">Add new account</string>
+    <string name="modify_account">Modify Account</string>
     <string name="password">Password</string>
     <string name="id">ID</string>
     <string name="description_close">Close</string>
@@ -10,4 +11,5 @@
     <string name="code">Code</string>
     <string name="crown">Crown</string>
     <string name="password_string">Password: ************</string>
+    <string name="description_delete">Delete</string>
 </resources>
