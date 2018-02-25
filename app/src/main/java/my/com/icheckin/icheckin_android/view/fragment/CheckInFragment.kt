@@ -41,7 +41,6 @@ class CheckInFragment : Fragment() {
         button_CheckIn.setOnClickListener {
             async {
                 icheckinService!!.startCheckin(editText_Code.text.toString())
-                icheckinService!!.lastSeen = false
             }
         }
     }
@@ -77,9 +76,11 @@ class CheckInFragment : Fragment() {
             val binder = service as IcheckinService.IcheckinServiceBinder
             icheckinService = binder.service
             icheckinService!!.background()
-            if (icheckinService!!.running!! || !icheckinService!!.lastSeen) {
+            if (!icheckinService!!.lastSeen) {
                 textView_Status.text = icheckinService!!.status
-                icheckinService!!.lastSeen = true
+                if (!icheckinService!!.running!!) {
+                    icheckinService!!.lastSeen = true
+                }
             }
         }
 

@@ -47,6 +47,7 @@ class IcheckinService : Service() {
     fun startCheckin(code: String) {
         if (!running!!) {
             running = true
+            lastSeen = false
             updateStatus("", append = false)
             val students = AppDatabase.getDatabase(applicationContext).studentDao().allStudent()
             for (student in students) {
@@ -63,7 +64,7 @@ class IcheckinService : Service() {
         }
     }
 
-    fun updateStatus(text: String, append: Boolean = true) {
+    private fun updateStatus(text: String, append: Boolean = true) {
         if (append) {
             status += text
         } else {
