@@ -34,7 +34,7 @@ class AccountCardView(val context: Context, private val students: MutableList<St
                 listener.invoke(student)
             }
             itemView.textView_ID.text = student.username
-            if (position == 0) itemView.imageView_Crown.visible = true
+            itemView.imageView_Crown.visible = position == 0
         }
     }
 

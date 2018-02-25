@@ -85,10 +85,6 @@ object Request {
         reader.forEachLine { line ->
             stringBuilder.append(line)
         }
-/*        while (reader.){
-            val line = reader.readLine() ?: break
-            stringBuilder.append(line)
-        }*/
         return stringBuilder.toString()
     }
 }

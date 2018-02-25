@@ -15,6 +15,7 @@
         <activity
             android:name=".view.MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +26,14 @@
         <activity
             android:name=".view.AddAccountActivity"
             android:label="@string/add_new_account"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Secondary" />
         <activity
             android:name=".view.ModifyAccountActivity"
             android:label="@string/modify_account"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Secondary" />
+        <service android:name=".utils.service.IcheckinService" />
     </application>
 
 </manifest>

@@ -1,28 +1,27 @@
 package my.com.icheckin.icheckin_android.fragment
 
 
+import android.content.*
 import android.os.Bundle
+import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_check_in.*
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import my.com.icheckin.icheckin_android.R
-import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
-import java.io.IOException
+import my.com.icheckin.icheckin_android.utils.service.IcheckinService
 
 
 /**
  * A simple [Fragment] subclass.
  */
 class CheckInFragment : Fragment() {
+
+    var icheckinService: IcheckinService? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,29 +39,51 @@ class CheckInFragment : Fragment() {
         }
 
         button_CheckIn.setOnClickListener {
-            textView_Status.text = ""
-            enableButton(false)
-            activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
             async {
-                val students = AppDatabase.getDatabase(activity.applicationContext).studentDao().allStudent()
-                val code = editText_Code.text.toString()
-                for (student in students) {
-                    launch(UI) { textView_Status.text = "${textView_Status.text.toString()}Checking in for ${student.username}\n" }
-                    try {
-                        val result = Izone.checkin(student.username!!, student.password(activity.applicationContext), code)
-                        launch(UI) { textView_Status.text = "${textView_Status.text.toString()}$result\n" }
-                    } catch (e: IOException) {
-                        launch(UI) { textView_Status.text = "${textView_Status.text.toString()}No internet connection\n" }
-                    }
-                }
-                launch(UI) {
-                    textView_Status.text = "${textView_Status.text.toString()}Finish Checkin\n"
-                    enableButton(true)
-                    activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                }
+                icheckinService!!.startCheckin(editText_Code.text.toString())
+                icheckinService!!.lastSeen = false
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val service = Intent(context, IcheckinService::class.java)
+        activity.startService(service)
+        activity.bindService(service, serviceConnection, 0)
+        activity.registerReceiver(broadcastReceiver, IntentFilter(IcheckinService.BROADCAST_ACTION))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity.unregisterReceiver(broadcastReceiver)
+        if (icheckinService!!.running!!) {
+            icheckinService!!.foreground()
+        } else {
+            activity.stopService(Intent(context, IcheckinService::class.java))
+        }
+        activity.unbindService(serviceConnection)
+    }
+
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            textView_Status.text = icheckinService!!.status
+        }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as IcheckinService.IcheckinServiceBinder
+            icheckinService = binder.service
+            icheckinService!!.background()
+            if (icheckinService!!.running!! || !icheckinService!!.lastSeen) {
+                textView_Status.text = icheckinService!!.status
+                icheckinService!!.lastSeen = true
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
         }
     }
 
