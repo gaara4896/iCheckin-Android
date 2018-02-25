@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="5dp"
     app:cardBackgroundColor="@color/backgroundCard"
     app:cardCornerRadius="10dp">
 
@@ -12,17 +12,20 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/linearLayout"
                 android:background="@android:color/transparent"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
@@ -42,12 +45,12 @@
 
         <ImageView
             android:id="@+id/imageView_Crown"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
             android:contentDescription="@string/crown"
             android:src="@drawable/ic_crown"
             android:visibility="invisible" />
