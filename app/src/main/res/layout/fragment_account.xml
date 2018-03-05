@@ -20,7 +20,7 @@
             android:text="@string/add_new_account"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycleView_Account"
