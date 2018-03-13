@@ -10,16 +10,17 @@ import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
+import my.com.icheckin.icheckin_android.model.entity.Student
+import my.com.icheckin.icheckin_android.utils.collection.MutablePair
 import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import my.com.icheckin.icheckin_android.view.MainActivity
-import java.io.IOException
 
 /**
  * Created by gaara on 2/24/18.
  */
 class IcheckinService : Service() {
 
-    var status: String = ""
+    val status: MutableList<MutablePair<Student, Int?>> = mutableListOf()
     var running: Boolean? = null
     var lastSeen = true
     private val NOTIFICATION_ID = 1
@@ -48,29 +49,25 @@ class IcheckinService : Service() {
         if (!running!!) {
             running = true
             lastSeen = false
-            updateStatus("", append = false)
-            val students = AppDatabase.getDatabase(applicationContext).studentDao().allStudent()
-            for (student in students) {
-                updateStatus("Checking in for ${student.username}\n")
-                try {
-                    val result = Izone.checkin(student.username!!, student.password(applicationContext), code)
-                    updateStatus("$result\n")
-                } catch (e: IOException) {
-                    updateStatus("No internet connection\n")
-                }
+            for (pair in status) {
+                pair.second = 0
             }
-            updateStatus("Finish Checkin\n")
+            sendBroadcast(broadcastIntent)
+            for (pair in status) {
+                val student = pair.first
+                pair.second = Izone.checkin(student.username!!, student.password(applicationContext), code)
+                sendBroadcast(broadcastIntent)
+            }
             running = false
         }
     }
 
-    private fun updateStatus(text: String, append: Boolean = true) {
-        if (append) {
-            status += text
-        } else {
-            status = text
+    fun initializeStatus() {
+        status.clear()
+        val students = AppDatabase.getDatabase(applicationContext).studentDao().allStudent()
+        for (student in students) {
+            status.add(MutablePair(student, null))
         }
-        sendBroadcast(broadcastIntent)
     }
 
     fun foreground() {

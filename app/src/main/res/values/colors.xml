@@ -9,4 +9,6 @@
     <color name="backgroundNavigation">#2E333D</color>
     <color name="backgroundCard">#D4EAE6</color>
     <color name="disabled">#555555</color>
+    <color name="successText">#3AA982</color>
+    <color name="failureText">#A93A3A</color>
 </resources>

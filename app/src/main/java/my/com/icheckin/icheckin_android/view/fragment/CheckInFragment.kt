@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_check_in.*
 import kotlinx.coroutines.experimental.async
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.utils.service.IcheckinService
+import my.com.icheckin.icheckin_android.view.fragment.CheckInStatusCardView
 
 
 /**
@@ -43,14 +45,21 @@ class CheckInFragment : Fragment() {
                 icheckinService!!.startCheckin(editText_Code.text.toString())
             }
         }
+
+        recycleView_CheckinStatus.layoutManager = LinearLayoutManager(activity.applicationContext)
     }
 
     override fun onStart() {
         super.onStart()
+
         val service = Intent(context, IcheckinService::class.java)
         activity.startService(service)
         activity.bindService(service, serviceConnection, 0)
         activity.registerReceiver(broadcastReceiver, IntentFilter(IcheckinService.BROADCAST_ACTION))
+    }
+
+    fun loadStatus() {
+        recycleView_CheckinStatus.adapter = CheckInStatusCardView(activity.applicationContext, icheckinService!!.status)
     }
 
     override fun onStop() {
@@ -66,7 +75,8 @@ class CheckInFragment : Fragment() {
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            textView_Status.text = icheckinService!!.status
+            // textView_Status.text = icheckinService!!.status
+            recycleView_CheckinStatus.adapter.notifyDataSetChanged()
         }
     }
 
@@ -76,12 +86,14 @@ class CheckInFragment : Fragment() {
             val binder = service as IcheckinService.IcheckinServiceBinder
             icheckinService = binder.service
             icheckinService!!.background()
-            if (!icheckinService!!.lastSeen) {
-                textView_Status.text = icheckinService!!.status
+            if (icheckinService!!.lastSeen) {
+                icheckinService!!.initializeStatus()
+            } else {
                 if (!icheckinService!!.running!!) {
                     icheckinService!!.lastSeen = true
                 }
             }
+            loadStatus()
         }
 
         override fun onServiceDisconnected(name: ComponentName) {

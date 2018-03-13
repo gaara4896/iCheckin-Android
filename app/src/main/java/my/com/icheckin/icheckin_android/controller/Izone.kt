@@ -30,33 +30,37 @@ object Izone {
         return Pair(false, pair.second)
     }
 
-    fun checkin(username: String, password: String, code: String): String {
-
-        val pair = login(username, password)
-        if (!pair.first) {
-            return "Invalid credentials"
-        }
+    fun checkin(username: String, password: String, code: String): Int {
 
         try {
-            Request.get(WIFI_URL)
-        } catch (e: IOException) {
-            return "Not connected to University Wi-Fi"
-        }
-
-        val response = Request.post(CHECKIN_URL, data = mapOf("checkin_code" to code),
-                cookieJar = pair.second).first
-        if (response.isSuccessful) {
-            val textFuture = async { Request.responseBodyReader(response) }
-            val text = runBlocking { textFuture.await() }
-            if ("Checkin code not valid." in text || "The specified URL cannot be found." in text) {
-                return "Invalid code"
-            } else if ("You cannot check in to a class you are not a part of." in text) {
-                return "Wrong class"
-            } else if ("You have already checked in" in text) {
-                return "Already checked-in"
+            val pair = login(username, password)
+            if (!pair.first) {
+                return 2
             }
-            return "Successful check-in"
+
+            try {
+                Request.get(WIFI_URL)
+            } catch (e: IOException) {
+                return 3
+            }
+
+            val response = Request.post(CHECKIN_URL, data = mapOf("checkin_code" to code),
+                    cookieJar = pair.second).first
+            if (response.isSuccessful) {
+                val textFuture = async { Request.responseBodyReader(response) }
+                val text = runBlocking { textFuture.await() }
+                if ("Checkin code not valid." in text || "The specified URL cannot be found." in text) {
+                    return 4
+                } else if ("You cannot check in to a class you are not a part of." in text) {
+                    return 5
+                } else if ("You have already checked in" in text) {
+                    return 6
+                }
+                return 7
+            }
+            return 1
+        } catch (e: IOException) {
+            return 1
         }
-        return "No internet connection"
     }
 }
