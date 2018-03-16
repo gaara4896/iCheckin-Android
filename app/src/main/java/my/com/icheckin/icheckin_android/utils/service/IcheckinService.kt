@@ -59,6 +59,7 @@ class IcheckinService : Service() {
                 sendBroadcast(broadcastIntent)
             }
             running = false
+            sendBroadcast(broadcastIntent)
         }
     }
 

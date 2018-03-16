@@ -33,6 +33,8 @@ android {
 }
 
 dependencies {
+    // AdMob
+    compile 'com.google.android.gms:play-services-ads:11.8.0'
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.0"
     // alternatively, just ViewModel

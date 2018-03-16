@@ -3,8 +3,10 @@ package my.com.icheckin.icheckin_android.view
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import my.com.icheckin.icheckin_android.R
+import my.com.icheckin.icheckin_android.controller.Advertisement
 import my.com.icheckin.icheckin_android.fragment.AccountFragment
 import my.com.icheckin.icheckin_android.fragment.CheckInFragment
 
@@ -27,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this, Advertisement.ADMOB_APP_ID)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
