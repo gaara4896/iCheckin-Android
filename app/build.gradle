@@ -12,8 +12,9 @@ android {
         applicationId "my.com.icheckin.icheckin_android"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 0
-        versionName "0.3"
+        multiDexEnabled true
+        versionCode 1
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,6 +34,7 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
     // AdMob
     compile 'com.google.android.gms:play-services-ads:11.8.0'
     // ViewModel and LiveData
