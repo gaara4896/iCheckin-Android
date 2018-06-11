@@ -21,7 +21,7 @@ import my.com.icheckin.icheckin_android.view.fragment.AccountCardView
  */
 class AccountFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater!!.inflate(R.layout.fragment_account, container, false)
@@ -31,7 +31,7 @@ class AccountFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         button_NewAccount.setOnClickListener {
-            startActivity(IntentFor<AddAccountActivity>(context))
+            startActivity(IntentFor<AddAccountActivity>(context!!))
         }
 
         loadStudent()
@@ -43,11 +43,11 @@ class AccountFragment : Fragment() {
     }
 
     private fun loadStudent() {
-        val db = AppDatabase.getDatabase(activity.applicationContext)
+        val db = AppDatabase.getDatabase(activity!!.applicationContext)
         val students = db.studentDao().allStudent()
-        recycleView_Account.layoutManager = LinearLayoutManager(activity.applicationContext)
-        recycleView_Account.adapter = AccountCardView(activity.applicationContext, students) { student ->
-            val intent = IntentFor<ModifyAccountActivity>(context)
+        recycleView_Account.layoutManager = LinearLayoutManager(activity!!.applicationContext)
+        recycleView_Account.adapter = AccountCardView(activity!!.applicationContext, students) { student ->
+            val intent = IntentFor<ModifyAccountActivity>(context!!)
             intent.putExtra("student", student)
             startActivity(intent)
         }
