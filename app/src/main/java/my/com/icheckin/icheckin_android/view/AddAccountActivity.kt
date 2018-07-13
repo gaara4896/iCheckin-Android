@@ -53,7 +53,10 @@ class AddAccountActivity : AppCompatActivity() {
         }
 
         button_AddAccount.setOnClickListener {
-            insertAccount(editText_ID.text.toString(), editText_Password.text.toString())
+            //insertAccount(editText_ID.text.toString(), editText_Password.text.toString())
+            async {
+                Izone.register(editText_ID.text.toString(), editText_Password.text.toString())
+            }
         }
     }
 

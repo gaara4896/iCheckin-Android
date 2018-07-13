@@ -45,6 +45,21 @@ object Request {
         return runBlocking { responseFuture.await() }
     }
 
+    fun post_json(url: String, data: String? = null): Response {
+        val clientBuilder = OkHttpClient.Builder()
+
+        val JSON = MediaType.parse("application/json; charset=utf-8")
+
+        val client = OkHttpClient()
+
+        val body = RequestBody.create(JSON, data)
+        val request = okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
+                .build()
+        return client.newCall(request).execute()
+    }
+
     fun post(url: String, data: Map<String, String>? = null, cookieJar: CookieJar? = null,
              timeout: Long = 2, unit: TimeUnit = TimeUnit.SECONDS): Pair<Response, CookieJar> {
 
