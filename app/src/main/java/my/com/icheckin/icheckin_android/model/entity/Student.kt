@@ -10,6 +10,9 @@ import java.io.Serializable
 /**
  * Created by gaara on 2/3/18.
  */
+@Deprecated("Student database deprecated, not in use anymore",
+        replaceWith = ReplaceWith("my.com.icheckin.icheckin_android.model.entity.Credential"),
+        level = DeprecationLevel.WARNING)
 @Entity
 class Student : Serializable {
 

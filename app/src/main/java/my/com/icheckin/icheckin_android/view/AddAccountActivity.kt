@@ -6,17 +6,15 @@ import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import com.pawegio.kandroid.longToast
 import com.pawegio.kandroid.textWatcher
-import com.pawegio.kandroid.wtf
 import kotlinx.android.synthetic.main.activity_add_account.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.model.entity.Student
+import my.com.icheckin.icheckin_android.model.entity.Credential
 import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import my.com.icheckin.icheckin_android.utils.view.CustomProgressDialog
-import java.io.IOException
 
 class AddAccountActivity : AppCompatActivity() {
 
@@ -31,7 +29,7 @@ class AddAccountActivity : AppCompatActivity() {
         editText_ID.textWatcher {
             afterTextChanged { text ->
                 if (text!!.isNotBlank()) {
-                    if (editText_Password.isNotBlank) {
+                    if (editText_Otp.isNotBlank) {
                         enableButton(true)
                     }
                 } else {
@@ -40,7 +38,7 @@ class AddAccountActivity : AppCompatActivity() {
             }
         }
 
-        editText_Password.textWatcher {
+        editText_Otp.textWatcher {
             afterTextChanged { text ->
                 if (text!!.isNotBlank()) {
                     if (editText_ID.isNotBlank) {
@@ -53,10 +51,7 @@ class AddAccountActivity : AppCompatActivity() {
         }
 
         button_AddAccount.setOnClickListener {
-            //insertAccount(editText_ID.text.toString(), editText_Password.text.toString())
-            async {
-                Izone.register(editText_ID.text.toString(), editText_Password.text.toString())
-            }
+            registerAccount(editText_ID.text.toString(), editText_Otp.text.toString())
         }
     }
 
@@ -66,14 +61,13 @@ class AddAccountActivity : AppCompatActivity() {
         button_AddAccount.background = ContextCompat.getDrawable(applicationContext, buttonDrawable)
     }
 
-    private fun insertAccount(username: String, password: String) {
+    private fun registerAccount(username: String, otp: String) {
         val progressDialog = CustomProgressDialog(this)
         progressDialog.show()
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
         async {
             val db = AppDatabase.getDatabase(applicationContext)
-            if (db.studentDao().query(username) != null) {
+            if (db.credentialDao().query(username) != null) {
                 launch(UI) {
                     editText_ID.error = "$username already exists"
                     progressDialog.hide()
@@ -81,30 +75,24 @@ class AddAccountActivity : AppCompatActivity() {
                 }
                 return@async
             }
-            try {
-                val success = Izone.login(username, password).first
-                launch(UI) {
-                    progressDialog.hide()
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                }
-                if (success) {
-                    val student = Student()
-                    student.init(applicationContext, username, password)
-                    db.studentDao().insert(student)
+            val result = Izone.register(username, otp)
+            launch(UI) {
+                progressDialog.hide()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            }
+            when (result["status"] as Int) {
+                0 -> {
+                    db.credentialDao().insert(
+                            Credential(username, result["device_id"] as String)
+                    )
                     launch(UI) {
                         longToast("Success")
                         finish()
                     }
-                } else {
-                    launch(UI) { editText_Password.error = "Wrong password" }
                 }
-            } catch (e: IOException) {
-                wtf(e.toString())
-                launch(UI) {
-                    longToast("No internet connection")
-                    progressDialog.hide()
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                }
+                1 -> launch(UI) { editText_Otp.error = "Please try a new OTP" }
+                2 -> launch(UI) { longToast("No internet connection") }
+                3 -> launch(UI) { longToast("Not connected to uni wifi") }
             }
         }
     }

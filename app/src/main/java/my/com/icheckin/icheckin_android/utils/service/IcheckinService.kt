@@ -10,7 +10,7 @@ import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.controller.Izone
-import my.com.icheckin.icheckin_android.model.entity.Student
+import my.com.icheckin.icheckin_android.model.entity.Credential
 import my.com.icheckin.icheckin_android.utils.collection.MutablePair
 import my.com.icheckin.icheckin_android.utils.storage.AppDatabase
 import my.com.icheckin.icheckin_android.view.MainActivity
@@ -20,7 +20,7 @@ import my.com.icheckin.icheckin_android.view.MainActivity
  */
 class IcheckinService : Service() {
 
-    val status: MutableList<MutablePair<Student, Int?>> = mutableListOf()
+    val status: MutableList<MutablePair<Credential, Int?>> = mutableListOf()
     var running: Boolean? = null
     var lastSeen = true
     private val NOTIFICATION_ID = 1
@@ -50,12 +50,12 @@ class IcheckinService : Service() {
             running = true
             lastSeen = false
             for (pair in status) {
-                pair.second = 0
+                pair.second = -1
             }
             sendBroadcast(broadcastIntent)
             for (pair in status) {
-                val student = pair.first
-                pair.second = Izone.checkin(student.username!!, student.password(applicationContext), code)
+                val credential = pair.first
+                pair.second = Izone.checkin(applicationContext, credential, code)
                 sendBroadcast(broadcastIntent)
             }
             running = false
@@ -65,9 +65,9 @@ class IcheckinService : Service() {
 
     fun initializeStatus() {
         status.clear()
-        val students = AppDatabase.getDatabase(applicationContext).studentDao().allStudent()
-        for (student in students) {
-            status.add(MutablePair(student, null))
+        val credentials = AppDatabase.getDatabase(applicationContext).credentialDao().allCredential()
+        for (credential in credentials) {
+            status.add(MutablePair(credential, null))
         }
     }
 

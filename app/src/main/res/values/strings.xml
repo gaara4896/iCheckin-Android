@@ -5,13 +5,13 @@
     <string name="add_new_account">Add new account</string>
     <string name="modify_account">Modify Account</string>
     <string name="save">Save</string>
-    <string name="password">Password</string>
+    <string name="otp">Otp</string>
     <string name="id">ID</string>
     <string name="description_close">Close</string>
     <string name="add_account">Add Account</string>
     <string name="code">Code</string>
     <string name="crown">Crown</string>
-    <string name="password_string">Password: ************</string>
+    <string name="device_id">Device ID: </string>
     <string name="description_delete">Delete</string>
     <string name="main_account">Main Account</string>
     <string name="not_available">--</string>
