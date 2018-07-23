@@ -1,66 +1,78 @@
 package my.com.icheckin.icheckin_android.controller
 
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import android.content.Context
+import com.pawegio.kandroid.wifiManager
+import my.com.icheckin.icheckin_android.model.entity.Credential
 import my.com.icheckin.icheckin_android.utils.network.Request
-import okhttp3.CookieJar
+import okhttp3.Response
+import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 
 /**
  * Created by gaara on 1/29/18.
  */
 object Izone {
-    private val IZONE_URL = "https://izone.sunway.edu.my"
-    val LOGIN_URL = "$IZONE_URL/login"
-    private val CHECKIN_URL = "$IZONE_URL/icheckin/iCheckinNowWithCode"
-    private val WIFI_URL = "https://icheckin.sunway.edu.my/otp/CheckIn/isAlive/CuNv9UV2rXg4WtAsXUPNptg6gWQTZ52w"
+    private const val ICHECKIN_URL = "https://icheckin.sunway.edu.my"
+    private const val ICHECKIN_REGISTER_URL = "$ICHECKIN_URL/registration.php"
+    private const val ICHECKIN_CHECKIN_URL = "$ICHECKIN_URL/checkin_withcode.php"
+    private const val ICHECKIN_WIFI_URL = "$ICHECKIN_URL/otp/CheckIn/isAlive/CuNv9UV2rXg4WtAsXUPNptg6gWQTZ52w"
 
-    fun login(username: String, password: String): Pair<Boolean, CookieJar> {
+    fun register(username: String, otp: String): Map<String, Any> {
 
-        val payload = mapOf(
-                "form_action" to "submitted",
+        val deviceId = UUID.randomUUID().toString()
+
+        val payload = JSONObject(mapOf(
+                "device_id" to deviceId,
                 "student_uid" to username,
-                "password" to password)
-
-        val pair = Request.post(LOGIN_URL, data = payload)
-        val response = pair.first
-        if (response.isSuccessful && response.priorResponse() != null) {
-            return Pair(true, pair.second)
-        }
-        return Pair(false, pair.second)
-    }
-
-    fun checkin(username: String, password: String, code: String): Int {
+                "otp_code" to otp,
+                "source" to "ANDROID"
+        ))
 
         try {
-            val pair = login(username, password)
-            if (!pair.first) {
-                return 2
-            }
-
-            try {
-                Request.get(WIFI_URL)
-            } catch (e: IOException) {
-                return 3
-            }
-
-            val response = Request.post(CHECKIN_URL, data = mapOf("checkin_code" to code),
-                    cookieJar = pair.second).first
+            val response = Request.post(ICHECKIN_REGISTER_URL, json = payload)["response"] as Response
             if (response.isSuccessful) {
-                val textFuture = async { Request.responseBodyReader(response) }
-                val text = runBlocking { textFuture.await() }
-                if ("Checkin code not valid." in text || "The specified URL cannot be found." in text) {
-                    return 4
-                } else if ("You cannot check in to a class you are not a part of." in text) {
-                    return 5
-                } else if ("You have already checked in" in text) {
-                    return 6
+                val jsonResponse = JSONObject(response.body()!!.string())
+                when (jsonResponse["status"] as Int) {
+                    0 -> return mapOf("status" to 0, "device_id" to deviceId)
+                    1 -> return mapOf("status" to 1)
                 }
-                return 7
             }
-            return 1
         } catch (e: IOException) {
-            return 1
+            try {
+                Request.get(ICHECKIN_WIFI_URL)
+            } catch (e: IOException) {
+                return mapOf("status" to 3)
+            }
         }
+
+        return mapOf("status" to 2)
+    }
+
+    fun checkin(context: Context, credential: Credential, code: String): Int {
+        try {
+            val wifiInfo = context.wifiManager!!.connectionInfo
+            val payload = JSONObject(mapOf(
+                    "device_id" to credential.deviceId,
+                    "ssid" to wifiInfo.ssid.replace("\"", ""),
+                    "bssid" to wifiInfo.bssid,
+                    "source" to "ANDROID",
+                    "rssi" to wifiInfo.rssi,
+                    "code" to code
+            ))
+
+            val response = Request.post(ICHECKIN_CHECKIN_URL, json = payload)["response"] as Response
+            if (response.isSuccessful) {
+                val jsonResponse = JSONObject(response.body()!!.string())
+                return jsonResponse["status"] as Int
+            }
+        } catch (e: IOException) {
+            try {
+                Request.get(ICHECKIN_WIFI_URL)
+            } catch (e: IOException) {
+                return 8
+            }
+        }
+        return 9
     }
 }

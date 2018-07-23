@@ -60,15 +60,15 @@
             android:textColor="@android:color/white"
             android:textSize="25sp" />
 
-        <EditText
-            android:id="@+id/editText_Password"
+        <TextView
+            android:id="@+id/textView_DeviceID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_edit_text"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textStyle="bold"/>
+            android:layout_marginStart="15dp"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/button_ModifyAccount"
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:background="@drawable/rounded_button_secondary"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/save"
             android:textAllCaps="false"
             android:textColor="@android:color/white"

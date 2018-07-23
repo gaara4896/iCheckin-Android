@@ -24,7 +24,7 @@ class AccountFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_account, container, false)
+        return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -44,11 +44,11 @@ class AccountFragment : Fragment() {
 
     private fun loadStudent() {
         val db = AppDatabase.getDatabase(activity!!.applicationContext)
-        val students = db.studentDao().allStudent()
+        val credentials = db.credentialDao().allCredential()
         recycleView_Account.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        recycleView_Account.adapter = AccountCardView(activity!!.applicationContext, students) { student ->
+        recycleView_Account.adapter = AccountCardView(activity!!.applicationContext, credentials) { credential ->
             val intent = IntentFor<ModifyAccountActivity>(context!!)
-            intent.putExtra("student", student)
+            intent.putExtra("credential", credential)
             startActivity(intent)
         }
     }

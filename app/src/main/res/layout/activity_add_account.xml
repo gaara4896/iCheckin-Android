@@ -34,42 +34,9 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <WebView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/editText_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/rounded_edit_text"
-            android:hint="@string/id"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/editText_Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_edit_text"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/button_AddAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/rounded_button_disabled"
-            android:enabled="false"
-            android:text="@string/add_account"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/webView_Izone" />
 
 </LinearLayout>

@@ -10,15 +10,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_check_in.*
 import kotlinx.coroutines.experimental.async
 import my.com.icheckin.icheckin_android.R
-import my.com.icheckin.icheckin_android.controller.Advertisement
 import my.com.icheckin.icheckin_android.utils.service.IcheckinService
+import my.com.icheckin.icheckin_android.view.MainActivity
 import my.com.icheckin.icheckin_android.view.fragment.CheckInStatusCardView
 
 
@@ -28,27 +25,15 @@ import my.com.icheckin.icheckin_android.view.fragment.CheckInStatusCardView
 class CheckInFragment : Fragment() {
 
     var icheckinService: IcheckinService? = null
-    private lateinit var interstitialAd: InterstitialAd
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_check_in, container, false)
+        return inflater.inflate(R.layout.fragment_check_in, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        interstitialAd = InterstitialAd(activity!!.applicationContext)
-        interstitialAd.adUnitId = Advertisement.INTERSTITIALS_ADS_ID
-        interstitialAd.loadAd(AdRequest.Builder().build())
-
-        interstitialAd.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                interstitialAd.loadAd(AdRequest.Builder().build())
-            }
-        }
 
         editText_Code.textWatcher {
             afterTextChanged { text ->
@@ -61,7 +46,7 @@ class CheckInFragment : Fragment() {
                 icheckinService!!.startCheckin(editText_Code.text.toString())
             }
             enableButton(false)
-            if (interstitialAd.isLoaded) interstitialAd.show()
+            if ((activity as MainActivity).interstitialAd.isLoaded) ((activity as MainActivity).interstitialAd.show())
         }
 
         recycleView_CheckinStatus.layoutManager = LinearLayoutManager(activity!!.applicationContext)
@@ -93,7 +78,6 @@ class CheckInFragment : Fragment() {
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // textView_Status.text = icheckinService!!.status
             recycleView_CheckinStatus.adapter.notifyDataSetChanged()
             if (!icheckinService!!.running!!) enableButton(true)
         }
