@@ -14,7 +14,7 @@ import my.com.icheckin.icheckin_android.model.entity.Student
 /**
  * Created by gaara on 2/9/18.
  */
-@Database(entities = [Student::class, Credential::class], version = 2)
+@Database(entities = [Student::class, Credential::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -23,17 +23,12 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             if (INSTANCE == null) {
-                val callback = object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                    }
-                }
                 INSTANCE = Room.databaseBuilder(
                         context,
                         AppDatabase::class.java,
                         DATABASE_NAME)
                         .addMigrations(MIGRATION_1_2)
-                        .addCallback(callback)
+                        .addMigrations(MIGRATION_2_3)
                         .allowMainThreadQueries()
                         .build()
             }
@@ -46,6 +41,12 @@ abstract class AppDatabase : RoomDatabase() {
                         "('id' INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "'username' TEXT NOT NULL, " +
                         "'deviceId' TEXT NOT NULL)")
+            }
+        }
+
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE 'credential' ADD COLUMN 'name' TEXT")
             }
         }
     }
