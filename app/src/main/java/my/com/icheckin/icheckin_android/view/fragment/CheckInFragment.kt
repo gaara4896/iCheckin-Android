@@ -2,10 +2,12 @@ package my.com.icheckin.icheckin_android.fragment
 
 
 import android.content.*
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -46,7 +48,19 @@ class CheckInFragment : Fragment() {
                 icheckinService!!.startCheckin(editText_Code.text.toString())
             }
             enableButton(false)
-            if ((activity as MainActivity).interstitialAd.isLoaded) ((activity as MainActivity).interstitialAd.show())
+            AlertDialog.Builder(context!!)
+                    .setTitle("Support Us")
+                    .setMessage("Like this app? Consider by us a cup of coffee by becoming our patreon")
+                    .setPositiveButton("Patreon site") { _, _ ->
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.patreon.com/icheckin")))
+                    }
+                    .setNegativeButton("No") { _, _ -> }
+                    .setNeutralButton("Facebook Page") { _, _ ->
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
+                    }
+                    .setCancelable(false)
+                    .create()
+                    .show()
         }
 
         recycleView_CheckinStatus.layoutManager = LinearLayoutManager(activity!!.applicationContext)
