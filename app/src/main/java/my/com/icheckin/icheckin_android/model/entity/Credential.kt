@@ -9,7 +9,7 @@ import java.io.Serializable
  * Created by gaara on 13/7/18.
  */
 @Entity
-class Credential(@ColumnInfo val username: String, @ColumnInfo val deviceId: String, @ColumnInfo val name: String?) : Serializable {
+class Credential(@ColumnInfo val username: String, @ColumnInfo val deviceId: String, @ColumnInfo var name: String?) : Serializable {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

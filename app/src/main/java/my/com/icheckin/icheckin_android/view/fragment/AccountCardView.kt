@@ -34,7 +34,7 @@ class AccountCardView(val context: Context, private val credentials: MutableList
                 listener.invoke(credential)
             }
             itemView.textView_ID.text = credential.username
-            itemView.textView_DeviceID.text = credential.deviceId
+            itemView.textView_Name.text = credential.name!!
             itemView.imageView_Crown.visible = position == 0
         }
     }

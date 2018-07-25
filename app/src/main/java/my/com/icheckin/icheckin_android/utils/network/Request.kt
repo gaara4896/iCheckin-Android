@@ -89,41 +89,6 @@ object Request {
         return mapOf("response" to response, "cookie" to client.cookieJar())
     }
 
-    @Deprecated(message = "post is Deprecated", level = DeprecationLevel.WARNING)
-    fun post(url: String, data: Map<String, String>? = null, cookieJar: CookieJar? = null,
-             timeout: Long = 2, unit: TimeUnit = TimeUnit.SECONDS): Pair<Response, CookieJar> {
-
-        val clientBuilder = OkHttpClient.Builder()
-                .connectTimeout(timeout, unit)
-
-        if (cookieJar != null) {
-            clientBuilder.cookieJar(cookieJar)
-        } else {
-            val cookieManager = CookieManager()
-            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-            clientBuilder.cookieJar(JavaNetCookieJar(cookieManager))
-        }
-
-        val client = clientBuilder.build()
-
-        val bodyBuilder = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-        if (data != null) {
-            for (key in data.keys) {
-                bodyBuilder.addFormDataPart(key, data[key]!!)
-            }
-        }
-        val body = bodyBuilder.build()
-
-        val request = okhttp3.Request.Builder()
-                .url(url)
-                .post(body)
-                .build()
-        val responseFuture = async { client.newCall(request).execute() }
-        val response = runBlocking { responseFuture.await() }
-        return Pair(response, client.cookieJar())
-    }
-
     fun responseBodyReader(response: Response): String {
         val reader = BufferedReader(response.body()!!.charStream())
         val stringBuilder = StringBuilder()

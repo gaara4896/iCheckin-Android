@@ -60,15 +60,15 @@
             android:textColor="@android:color/white"
             android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/textView_DeviceID"
+        <EditText
+            android:id="@+id/editText_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:background="@android:color/transparent"
-            android:textColor="@android:color/white"
-            android:textSize="25sp" />
+            android:background="@drawable/rounded_edit_text"
+            android:hint="@string/name_field"
+            android:inputType="text"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/button_ModifyAccount"

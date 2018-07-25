@@ -47,7 +47,7 @@ class AddAccountActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                if (url == "https://izone.sunway.edu.my/login") {
+                if (url == "https://izone.sunway.edu.my/login" && !::studentInfo.isInitialized) {
                     view!!.evaluateJavascript("(function () { " +
                             "var header = document.getElementById(\"header\");" +
                             "header.parentNode.removeChild(header);" +
@@ -91,6 +91,7 @@ class AddAccountActivity : AppCompatActivity() {
                             view!!.evaluateJavascript("(function () {" +
                                     "return document.getElementById(\"code\").childNodes[0].innerText" +
                                     "})();") { value -> registerAccount(value.replace("\"", "")) }
+                            view.loadUrl("https://izone.sunway.edu.my/logout")
                         }
                     }
                 }

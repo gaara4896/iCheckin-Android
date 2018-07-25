@@ -7,14 +7,12 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import my.com.icheckin.icheckin_android.model.dao.CredentialDao
-import my.com.icheckin.icheckin_android.model.dao.StudentDao
 import my.com.icheckin.icheckin_android.model.entity.Credential
-import my.com.icheckin.icheckin_android.model.entity.Student
 
 /**
  * Created by gaara on 2/9/18.
  */
-@Database(entities = [Student::class, Credential::class], version = 3)
+@Database(entities = [Credential::class], version = 4)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -29,6 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
                         DATABASE_NAME)
                         .addMigrations(MIGRATION_1_2)
                         .addMigrations(MIGRATION_2_3)
+                        .addMigrations(MIGRATION_3_4)
                         .allowMainThreadQueries()
                         .build()
             }
@@ -49,9 +48,13 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE 'credential' ADD COLUMN 'name' TEXT")
             }
         }
-    }
 
-    abstract fun studentDao(): StudentDao
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE IF EXISTS 'student'")
+            }
+        }
+    }
 
     abstract fun credentialDao(): CredentialDao
 }

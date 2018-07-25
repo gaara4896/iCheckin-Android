@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
                     finish()
                 }
+                .setCancelable(false)
                 .create()
                 .show()
     }
