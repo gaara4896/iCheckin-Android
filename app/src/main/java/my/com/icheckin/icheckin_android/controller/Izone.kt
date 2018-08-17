@@ -58,7 +58,7 @@ object Izone {
                     "bssid" to wifiInfo.bssid,
                     "source" to "ANDROID",
                     "rssi" to wifiInfo.rssi,
-                    "code" to code
+                    "icheckincode" to code
             ))
 
             val response = Request.post(ICHECKIN_CHECKIN_URL, json = payload)["response"] as Response
