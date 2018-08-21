@@ -1,7 +1,6 @@
 package my.com.icheckin.icheckin_android.controller
 
 import android.content.Context
-import com.google.gson.JsonObject
 import com.pawegio.kandroid.wifiManager
 import my.com.icheckin.icheckin_android.model.entity.Credential
 import my.com.icheckin.icheckin_android.utils.network.Request
@@ -22,12 +21,12 @@ object Izone {
     private const val HEROKU_BACKEND = "https://icheckin-backend.herokuapp.com"
     private const val HEROKU_BACKEND_USER = "$HEROKU_BACKEND/api/user"
 
-    fun register(username: String, otp: String, name:String): Map<String, Any> {
+    fun register(username: String, otp: String, name: String): Map<String, Any> {
 
         try {
             val response = Request.get("$HEROKU_BACKEND_USER/$username")
             val jsonResponse = JSONObject(response.body()!!.string())
-            when(response.code()){
+            when (response.code()) {
                 200 -> {
                     val user = jsonResponse.getJSONObject("user")
                     return mapOf(

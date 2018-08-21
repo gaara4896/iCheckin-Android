@@ -12,7 +12,7 @@ import my.com.icheckin.icheckin_android.model.entity.Credential
 /**
  * Created by gaara on 2/9/18.
  */
-@Database(entities = [Credential::class], version = 4)
+@Database(entities = [Credential::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {

@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.fragment_check_in.*
 import kotlinx.coroutines.experimental.async
 import my.com.icheckin.icheckin_android.R
 import my.com.icheckin.icheckin_android.utils.service.IcheckinService
-import my.com.icheckin.icheckin_android.view.MainActivity
 import my.com.icheckin.icheckin_android.view.fragment.CheckInStatusCardView
 
 
