@@ -112,17 +112,22 @@ class AddAccountActivity : AppCompatActivity() {
             if (db.credentialDao().query(studentInfo["username"]!!) != null) {
                 launch(UI) { longToast("${studentInfo["username"]} already exists") }
             } else {
-                val result = Izone.register(studentInfo["username"]!!, otp)
+                val result = Izone.register(studentInfo["username"]!!, otp, studentInfo["name"]!!)
                 when (result["status"] as Int) {
                     0 -> {
                         db.credentialDao().insert(
-                                Credential(studentInfo["username"]!!, result["device_id"] as String, studentInfo["name"])
+                                Credential(studentInfo["username"]!!, result["device_id"] as String, studentInfo["name"], "ANDROID")
                         )
                         launch(UI) { longToast("Success") }
                     }
                     1 -> launch(UI) { longToast("Please try again later") }
                     2 -> launch(UI) { longToast("No internet connection") }
                     3 -> launch(UI) { longToast("Not connected to uni wifi") }
+                    4 -> {
+                        db.credentialDao().insert(
+                                Credential(studentInfo["username"]!!, result["device_id"] as String, studentInfo["name"], result["source"] as String)
+                        )
+                    }
                 }
             }
             launch(UI) {

@@ -1,6 +1,7 @@
 package my.com.icheckin.icheckin_android.controller
 
 import android.content.Context
+import com.google.gson.JsonObject
 import com.pawegio.kandroid.wifiManager
 import my.com.icheckin.icheckin_android.model.entity.Credential
 import my.com.icheckin.icheckin_android.utils.network.Request
@@ -18,7 +19,27 @@ object Izone {
     private const val ICHECKIN_CHECKIN_URL = "$ICHECKIN_URL/checkin_withcode.php"
     private const val ICHECKIN_WIFI_URL = "$ICHECKIN_URL/otp/CheckIn/isAlive/CuNv9UV2rXg4WtAsXUPNptg6gWQTZ52w"
 
-    fun register(username: String, otp: String): Map<String, Any> {
+    private const val HEROKU_BACKEND = "https://icheckin-backend.herokuapp.com"
+    private const val HEROKU_BACKEND_USER = "$HEROKU_BACKEND/api/user"
+
+    fun register(username: String, otp: String, name:String): Map<String, Any> {
+
+        try {
+            val response = Request.get("$HEROKU_BACKEND_USER/$username")
+            val jsonResponse = JSONObject(response.body()!!.string())
+            when(response.code()){
+                200 -> {
+                    val user = jsonResponse.getJSONObject("user")
+                    return mapOf(
+                            "status" to 4,
+                            "device_id" to user["device_id"],
+                            "source" to user["source"]
+                    )
+                }
+            }
+        } catch (e: IOException) {
+            return mapOf("status" to 2)
+        }
 
         val deviceId = UUID.randomUUID().toString()
 
@@ -34,7 +55,20 @@ object Izone {
             if (response.isSuccessful) {
                 val jsonResponse = JSONObject(response.body()!!.string())
                 when (jsonResponse["status"] as Int) {
-                    0 -> return mapOf("status" to 0, "device_id" to deviceId)
+                    0 -> {
+                        val userPayload = JSONObject(mapOf(
+                                "device_id" to deviceId,
+                                "username" to username,
+                                "name" to name,
+                                "source" to "ANDROID"
+                        ))
+                        val herokuResponse = Request.post(HEROKU_BACKEND_USER, json = userPayload)["response"] as Response
+                        return if (herokuResponse.isSuccessful) {
+                            mapOf("status" to 0, "device_id" to deviceId)
+                        } else {
+                            mapOf("status" to 1)
+                        }
+                    }
                     1 -> return mapOf("status" to 1)
                 }
             }
@@ -56,7 +90,7 @@ object Izone {
                     "device_id" to credential.deviceId,
                     "ssid" to wifiInfo.ssid.replace("\"", ""),
                     "bssid" to wifiInfo.bssid,
-                    "source" to "ANDROID",
+                    "source" to credential.source,
                     "rssi" to wifiInfo.rssi,
                     "icheckincode" to code
             ))
