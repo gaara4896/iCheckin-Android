@@ -42,26 +42,26 @@ object Izone {
 
         val deviceId = UUID.randomUUID().toString()
 
-        val payload = mapOf(
+        val payload = JSONObject(mapOf(
                 "device_id" to deviceId,
                 "student_uid" to username,
                 "otp_code" to otp,
                 "source" to "ANDROID"
-        )
+        ))
 
         try {
-            val response = Request.post(ICHECKIN_REGISTER_URL, form = payload)["response"] as Response
+            val response = Request.post(ICHECKIN_REGISTER_URL, json = payload)["response"] as Response
             if (response.isSuccessful) {
                 val jsonResponse = JSONObject(response.body()!!.string())
                 when (jsonResponse["status"] as Int) {
                     0 -> {
-                        val userPayload = JSONObject(mapOf(
+                        val userPayload = mapOf(
                                 "device_id" to deviceId,
                                 "username" to username,
                                 "name" to name,
                                 "source" to "ANDROID"
-                        ))
-                        val herokuResponse = Request.post(HEROKU_BACKEND_USER, json = userPayload)["response"] as Response
+                        )
+                        val herokuResponse = Request.post("$HEROKU_BACKEND_USER/", form = userPayload)["response"] as Response
                         return if (herokuResponse.isSuccessful) {
                             mapOf("status" to 0, "device_id" to deviceId)
                         } else {
