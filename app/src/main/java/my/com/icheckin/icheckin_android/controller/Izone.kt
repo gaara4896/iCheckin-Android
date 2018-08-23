@@ -108,4 +108,17 @@ object Izone {
         }
         return 9
     }
+
+    fun delete(credential: Credential): Boolean {
+        try {
+            val response = Request.delete("$HEROKU_BACKEND_USER/${credential.username}")
+            when (response.code()) {
+                204 -> {
+                    return true
+                }
+            }
+        } catch (e: IOException) {
+        }
+        return false
+    }
 }
