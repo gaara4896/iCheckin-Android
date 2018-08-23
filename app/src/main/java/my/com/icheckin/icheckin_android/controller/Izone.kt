@@ -42,15 +42,15 @@ object Izone {
 
         val deviceId = UUID.randomUUID().toString()
 
-        val payload = JSONObject(mapOf(
+        val payload = mapOf(
                 "device_id" to deviceId,
                 "student_uid" to username,
                 "otp_code" to otp,
                 "source" to "ANDROID"
-        ))
+        )
 
         try {
-            val response = Request.post(ICHECKIN_REGISTER_URL, json = payload)["response"] as Response
+            val response = Request.post(ICHECKIN_REGISTER_URL, form = payload)["response"] as Response
             if (response.isSuccessful) {
                 val jsonResponse = JSONObject(response.body()!!.string())
                 when (jsonResponse["status"] as Int) {
