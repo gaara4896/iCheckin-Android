@@ -49,11 +49,25 @@ class CheckInFragment : Fragment() {
             enableButton(false)
             AlertDialog.Builder(context!!)
                     .setTitle("Support Us")
-                    .setMessage("Like this app? Consider by us a cup of coffee by becoming our patreon")
-                    .setPositiveButton("Patreon site") { _, _ ->
+                    .setMessage("If you like this app, consider buying us a cup of coffee ☕️")
+                    .setPositiveButton("Sure!") { _, _ ->
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.patreon.com/icheckin")))
                     }
-                    .setNegativeButton("No") { _, _ -> }
+                    .setNegativeButton("I'm Poor") { _, _ ->
+                        AlertDialog.Builder(context!!)
+                                .setTitle("Are you sure?")
+                                .setMessage("Just $1, and we can make your uni life better 10000%")
+                                .setPositiveButton("OK let's do it \uD83E\uDD1F") { _, _ ->
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.patreon.com/icheckin")))
+                                }
+                                .setNeutralButton("Facebook Page") { _, _ ->
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
+                                }
+                                .setNegativeButton("I'm really poor \uD83E\uDD22") { _, _ -> }
+                                .setCancelable(false)
+                                .create()
+                                .show()
+                    }
                     .setNeutralButton("Facebook Page") { _, _ ->
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
                     }
