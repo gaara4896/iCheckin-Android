@@ -19,6 +19,7 @@ object Request {
 
         val clientBuilder = OkHttpClient.Builder()
                 .connectTimeout(timeout, unit)
+                .addInterceptor(UserAgentInterceptor())
 
         if (cookieJar != null) {
             clientBuilder.cookieJar(cookieJar)
@@ -52,6 +53,7 @@ object Request {
 
         val clientBuilder = OkHttpClient.Builder()
                 .connectTimeout(timeout, unit)
+                .addInterceptor(UserAgentInterceptor())
 
         if (cookieJar != null) {
             clientBuilder.cookieJar(cookieJar)
@@ -94,6 +96,7 @@ object Request {
 
         val clientBuilder = OkHttpClient.Builder()
                 .connectTimeout(timeout, unit)
+                .addInterceptor(UserAgentInterceptor())
 
         if (cookieJar != null) {
             clientBuilder.cookieJar(cookieJar)
