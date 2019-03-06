@@ -56,21 +56,21 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, AccountFragment()).commit()
     }
 
-    override fun onBackPressed() {
-        AlertDialog.Builder(this)
-                .setTitle("Exit")
-                .setMessage("Do you want to exit?")
-                .setPositiveButton("Yes") { _, _ ->
-                    if (interstitialAd.isLoaded) interstitialAd.show()
-                    super.onBackPressed()
-                }
-                .setNegativeButton("No") { _, _ -> }
-                .setNeutralButton("Facebook Page") { _, _ ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
-                    finish()
-                }
-                .setCancelable(false)
-                .create()
-                .show()
-    }
+//    override fun onBackPressed() {
+//        AlertDialog.Builder(this)
+//                .setTitle("Exit")
+//                .setMessage("Do you want to exit?")
+//                .setPositiveButton("Yes") { _, _ ->
+//                    if (interstitialAd.isLoaded) interstitialAd.show()
+//                    super.onBackPressed()
+//                }
+//                .setNegativeButton("No") { _, _ -> }
+//                .setNeutralButton("Facebook Page") { _, _ ->
+//                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/icheckinproject")))
+//                    finish()
+//                }
+//                .setCancelable(false)
+//                .create()
+//                .show()
+//    }
 }
